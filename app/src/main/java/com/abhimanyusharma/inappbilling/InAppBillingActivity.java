@@ -16,8 +16,7 @@ public class InAppBillingActivity extends AppCompatActivity {
 
     private static final String TAG = "InAppBilling";
     IabHelper mHelper;
-    //static final String ITEM_SKU = "YOUR PURCHASE ID";
-    static final String ITEM_SKU = "com.abhimanyusharma.inappbilling.pro";
+    static final String ITEM_SKU = "YOUR PURCHASE ID";
 
     private Button clickButton;
     private Button buyButton;
@@ -32,9 +31,7 @@ public class InAppBillingActivity extends AppCompatActivity {
 
         clickButton.setEnabled(false);
 
-        //String base64EncodedPublicKey = "<place your public key here>";
-        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqJUNhWfqOdIW+isT3MlF/xMCyij5ie+P9drmsGZT53AtdT/+jywTeYQ1KZ3KT75xWpO9IXx5BhhrS3rMk8VyiMcPAhXmRcKimt2wuKN0T/6MmRE/rnPmdjFcjAaXCF5mmCWfFSFFfTc9NGwkG4COr8Y+xAumlJUs6hMHF1xFPjjTE1tMn0qAIIt27iu/hdP1LrZX/kTd3bsYKRpfIEhteaYmODWn3R0yR84C/spEebzPFZ05Ym673++Y5cUnI6vpA237EnpnziKlrB7YlhQbsuKR3Bqu0/n2USxi5igQLpyn6kUp6xgBZaL3q/bocuaflkj7kaI1xNDzczKxvDWWqQIDAQAB";
-
+        String base64EncodedPublicKey = "<place your public key here>";
         mHelper = new IabHelper(this, base64EncodedPublicKey);
 
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
