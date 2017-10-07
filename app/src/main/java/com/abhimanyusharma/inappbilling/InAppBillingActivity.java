@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.abhimanyusharma.inappbilling.util.IabHelper;
 import com.abhimanyusharma.inappbilling.util.IabResult;
@@ -16,10 +17,12 @@ public class InAppBillingActivity extends AppCompatActivity {
 
     private static final String TAG = "InAppBilling";
     IabHelper mHelper;
-    static final String ITEM_SKU = "YOUR PURCHASE ID";
+    static final String ITEM_SKU = "android.test.purchased";
+    final String base64EncodedPublicKey = "null";
 
     private Button clickButton;
     private Button buyButton;
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +31,23 @@ public class InAppBillingActivity extends AppCompatActivity {
 
         buyButton = (Button)findViewById(R.id.buyButton);
         clickButton = (Button)findViewById(R.id.clickButton);
+        button = (Button)findViewById(R.id.button);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //startActivity(new Intent(getApplicationContext(), InAppBillingAnjlab1.class));
+                //finish();
+            }
+        });
 
         clickButton.setEnabled(false);
 
-        String base64EncodedPublicKey = "<place your public key here>";
+        //String base64EncodedPublicKey = "<place your public key here>";
+
         mHelper = new IabHelper(this, base64EncodedPublicKey);
+        mHelper.enableDebugLogging(true);
+        Log.d(TAG, "Starting setup.");
 
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
                                        public void onIabSetupFinished(IabResult result) {
@@ -40,6 +55,7 @@ public class InAppBillingActivity extends AppCompatActivity {
                                                Log.d(TAG, "In-app Billing setup failed: " + result);
                                            } else {
                                                Log.d(TAG, "In-app Billing is set up OK");
+                                               mHelper.enableDebugLogging(true, TAG);
                                            }
                                        }
                                    });
@@ -47,8 +63,10 @@ public class InAppBillingActivity extends AppCompatActivity {
 
     public void buttonClicked (View view)
     {
-        clickButton.setEnabled(false);
-        buyButton.setEnabled(true);
+        //clickButton.setEnabled(false);
+        //buyButton.setEnabled(true);
+
+        Toast.makeText(getApplicationContext(), "PURCHASE COMPLETE", Toast.LENGTH_SHORT).show();
     }
 
     public void buyClick(View view) {
@@ -56,11 +74,9 @@ public class InAppBillingActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,
-                                    Intent data)
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if (!mHelper.handleActivityResult(requestCode,
-                resultCode, data)) {
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -70,6 +86,9 @@ public class InAppBillingActivity extends AppCompatActivity {
         {
             if (result.isFailure()) {
                 // Handle error
+
+                Toast.makeText(getApplicationContext(), "Payment Failed1", Toast.LENGTH_SHORT).show();
+
                 return;
             }
             else if (purchase.getSku().equals(ITEM_SKU)) {
@@ -88,6 +107,10 @@ public class InAppBillingActivity extends AppCompatActivity {
 
             if (result.isFailure()) {
                 // Handle failure
+
+                Toast.makeText(getApplicationContext(), "Payment Failed2", Toast.LENGTH_SHORT).show();
+
+
             } else {
                 mHelper.consumeAsync(inventory.getPurchase(ITEM_SKU), mConsumeFinishedListener);
             }
@@ -98,9 +121,13 @@ public class InAppBillingActivity extends AppCompatActivity {
                 public void onConsumeFinished(Purchase purchase, IabResult result) {
 
                     if (result.isSuccess()) {
+                        buyButton.setEnabled(false);
                         clickButton.setEnabled(true);
                     } else {
                         // handle error
+
+                        Toast.makeText(getApplicationContext(), "Payment Failed3", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             };
@@ -115,6 +142,7 @@ public class InAppBillingActivity extends AppCompatActivity {
 
 /*
 
+* http://www.techotopia.com/index.php/An_Android_Studio_Google_Play_In-app_Billing_Tutorial
 * https://www.lynda.com/Android-tutorials/Welcome/601784/653939-4.html
 * https://github.com/anjlab/android-inapp-billing-v3/blob/master/sample/src/com/anjlab/android/iab/v3/sample2/MainActivity.java
 *https://github.com/anjlab/android-inapp-billing-v3
